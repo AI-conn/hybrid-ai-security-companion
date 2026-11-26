@@ -3,155 +3,324 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hybrid AI Security Companion — Dashboard</title>
+<title>Hybrid AI Security Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'IBM Plex Mono',monospace;background:#0d1117;color:#e6edf3;line-height:1.5;padding:2rem;max-width:1200px;margin:0 auto}
-h1{font-family:'IBM Plex Sans',sans-serif;color:#58a6ff;margin-bottom:.25rem}
-.sub{color:#8b949e;margin-bottom:2rem}
-.badge{display:inline-block;padding:.25rem .75rem;border-radius:12px;font-size:.8rem;font-weight:bold}
-.ready{background:#1a4721;color:#4ade80}
-.progress{background:#4d3a1c;color:#e8a14d}
-.pending{background:#3a0f0e;color:#f85149}
-section{margin-bottom:3rem}
-h2{font-family:'IBM Plex Sans',sans-serif;color:#a5d6ff;font-size:1.1rem;margin-bottom:1rem;border-bottom:1px solid #30363d;padding-bottom:.5rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
-.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.5rem;transition:border-color .2s}
-.card:hover{border-color:#58a6ff}
-.card h3{font-size:1rem;color:#e6edf3;margin-bottom:.5rem}
-.card p{color:#8b949e;font-size:.875rem}
-.card .status{float:right;margin-top:-.25rem}
-.svg-container{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:2rem;margin-bottom:1.5rem;text-align:center}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1rem;text-align:center}
-.stat .num{font-size:1.8rem;color:#58a6ff;font-weight:bold}
-.stat .lab{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.05em}
-table{width:100%;border-collapse:collapse}
-th,td{padding:.75rem;border-bottom:1px solid #30363d;text-align:left;font-size:.875rem}
-th{color:#8b949e;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-td{color:#e6edf3}
-tr:hover td{background:#161b22}
-.bar{height:8px;border-radius:4px;background:#30363d;overflow:hidden}
-.bar .fill{height:100%;border-radius:4px}
-.fill-green{background:#4ade80}
-.fill-amber{background:#e8a14d}
-.fill-red{background:#f85149}
-footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #30363d;color:#484f58;font-size:.8rem}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--surface:#09090b;--surface-1:#18181b;--surface-2:#27272a;--border:#27272a;--border-hover:#3f3f46;
+--text:#fafafa;--text-2:#a1a1aa;--text-3:#52525b;
+--green:#22c55e;--green-bg:#052e16;--blue:#3b82f6;--blue-bg:#172554;--amber:#f59e0b;--amber-bg:#451a03;--red:#ef4444;--red-bg:#450a0a;
+--sans:'Geist',system-ui,sans-serif;--mono:'Geist Mono',ui-monospace,monospace;
+--r:12px;--r-lg:16px;
+}
+body{background:var(--surface);color:var(--text);font-family:var(--sans);line-height:1.5;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+
+/* === TOP BAR === */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+.brand{display:flex;align-items:center;gap:.75rem}
+.brand .mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#22c55e,#3b82f6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1rem;color:#000}
+.brand h1{font-size:1.125rem;font-weight:600;letter-spacing:-.02em}
+.brand p{font-size:.8rem;color:var(--text-3);font-family:var(--mono)}
+.pill{display:inline-flex;align-items:center;gap:.4rem;padding:.375rem .75rem;border-radius:999px;font-size:.8rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface-1);color:var(--text-2);transition:all .2s}
+.pill:hover{border-color:var(--border-hover);color:var(--text)}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.pill .dot.amber{background:var(--amber);box-shadow:0 0 6px var(--amber)}
+
+/* === BENTO GRID === */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+.tile{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;position:relative;overflow:hidden;transition:border-color .25s;cursor:default}
+.tile:hover{border-color:var(--border-hover)}
+.tile.interactive{cursor:pointer}
+.tile.interactive:hover{border-color:#3f3f46;transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.tile.interactive:active{transform:translateY(0)}
+.tile .label{font-size:.7rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;font-weight:500}
+.tile .big{font-size:1.75rem;font-weight:700;font-family:var(--mono);letter-spacing:-.03em}
+.tile .sub{font-size:.8rem;color:var(--text-2);margin-top:.25rem}
+.tile .row{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.tile-stretch{grid-column:span 2}
+.tile-full{grid-column:span 4}
+.tile-3{grid-column:span 3}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:6px;font-size:.7rem;font-weight:600}
+.badge.g{background:var(--green-bg);color:var(--green);border:1px solid #166534}
+.badge.b{background:var(--blue-bg);color:var(--blue);border:1px solid #1e3a8a}
+.badge.a{background:var(--amber-bg);color:var(--amber);border:1px solid #92400e}
+.badge.r{background:var(--red-bg);color:var(--red);border:1px solid #7f1d1d}
+.badge .dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* === FLOW DIAGRAM === */
+.flow{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;justify-content:center}
+.node{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:.6rem .9rem;font-size:.8rem;font-weight:500;white-space:nowrap;transition:all .3s}
+.node.active{border-color:var(--green);color:var(--green);box-shadow:0 0 16px rgba(34,197,94,.15)}
+.node.decision{border-color:var(--amber);color:var(--amber)}
+.node.cloud{border-color:var(--blue);color:var(--blue)}
+.arrow{color:var(--text-3);font-size:1rem}
+.lane{display:flex;flex-direction:column;gap:.5rem;align-items:center}
+
+/* === TOOL BUTTONS === */
+.tools{display:flex;flex-direction:column;gap:.5rem}
+.tool-btn{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;border:none;color:var(--text);font-family:var(--sans);font-size:.85rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:left;width:100%;color:inherit}
+.tool-btn:hover{border-color:var(--accent-amber);background:var(--surface-1)}
+.tool-btn:active{transform:scale(.98)}
+.tool-btn .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem}
+.tool-btn .name{font-weight:600}
+.tool-btn .desc{font-size:.75rem;color:var(--text-3);margin-top:-2px}
+
+/* === TABLE === */
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+thead th{text-align:left;padding:.6rem .75rem;color:var(--text-3);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-bottom:1px solid var(--border)}
+tbody td{padding:.6rem .75rem;border-bottom:1px solid var(--border)}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+
+/* === TOAST === */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:.75rem 1rem;border-radius:10px;font-size:.85rem;transform:translateY(1rem);opacity:0;transition:all .25s;pointer-events:none;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* === MODAL === */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:90;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface-1);border:1px solid var(--border);border-radius:var(--r-lg);width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:1.5rem}
+.modal h2{font-size:1.125rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
+.modal .close{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:1.25rem;line-height:1;padding:.25rem}
+.modal .close:hover{color:var(--text)}
+.modal .body{font-size:.875rem;color:var(--text-2);line-height:1.6}
+.modal pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;margin:.75rem 0;font-family:var(--mono);font-size:.8rem;color:var(--text)}
+
+/* === TABS === */
+.tabs{display:flex;gap:.25rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.tab{padding:.5rem .75rem;background:none;border:none;color:var(--text-3);font-family:var(--sans);font-size:.8rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:var(--text-2)}
+.tab.active{color:var(--text);border-bottom-color:var(--blue)}
+.tab-body{display:none}.tab-body.active{display:block}
+
+/* === PROGRESS === */
+.progress{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-top:.5rem}
+.progress .bar{height:100%;background:var(--green);border-radius:3px;transition:width 1s ease-out}
+
+/* Footer */
+footer{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--text-3);font-size:.8rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+
+@media(max-width:768px){.bento{grid-template-columns:repeat(2,1fr)}.tile-3,.tile-full{grid-column:span 2}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<h1>Hybrid AI Security Companion</h1>
-<p class="sub">Built for #BuildHybridAI 2026 — Firebase AI Logic Hybrid Inference SDK</p>
-<span class="badge ready" id="overall-badge">SUBMISSION READY</span>
-<span class="badge pending">DEADLINE: NOV 30</span>
+  <!-- TOP BAR -->
+  <div class="top">
+    <div class="brand">
+      <div class="mark">HS</div>
+      <div><h1>Hybrid AI Security Companion</h1><p>#BuildHybridAI 2026</p></div>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="pill" onclick="copyText('https://github.com/AI-conn/hybrid-ai-security-companion', this)"><span class="dot"></span>Repo</button>
+      <button class="pill" onclick="toggleModal('detail-modal')"><span class="dot amber"></span>Nov 30</button>
+      <button class="pill" onclick="switchTab('submission')"><span class="dot"></span>Status: 8/8</button>
+    </div>
+  </div>
 
-<!-- ARCHITECTURE -->
-<section>
-<h2>Hybrid Inference Architecture</h2>
-<div class="svg-container">
-<svg width="700" height="280" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
-  <!-- User node -->
-  <rect x="10" y="110" width="100" height="50" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="60" y="140" fill="#e6edf3" font-size="14" text-anchor="middle">Security</text>
-  <text x="60" y="154" fill="#e6edf3" font-size="14" text-anchor="middle">Researcher</text>
+  <!-- BENTO ROW 1: HIGHLIGHT -->
+  <div class="bento">
+    <div class="tile tile-stretch interactive" onclick="openDemo('flow')">
+      <div class="label">Hybrid Inference</div>
+      <div class="flow">
+        <div class="node" id="n1">Input</div>
+        <span class="arrow">→</span>
+        <div class="node decision" id="n2">Nano 4?</div>
+        <span class="arrow">→</span>
+        <div class="lane">
+          <div class="node active" id="n3a">ON-DEVICE</div>
+        </div>
+        <span class="arrow">/</span>
+        <div class="lane">
+          <div class="node cloud" id="n3b">CLOUD</div>
+        </div>
+      </div>
+      <p class="sub" style="margin-top:.75rem">Click to trace the decision path</p>
+    </div>
+    <div class="tile tile-stretch">
+      <div class="label">Tools</div>
+      <div class="tools">
+        <button class="tool-btn" onclick="openDemo('summarize')"><span class="icon" style="background:#052e16;color:#4ade80">S</span><span><span class="name">Summarize</span><br><span class="desc">Raw report → structured finding</span></span></button>
+        <button class="tool-btn" onclick="openDemo('scenario')"><span class="icon" style="background:#451a03;color:#fbbf24">A</span><span><span class="name">Attack Scenario</span><br><span class="desc">VRP-format exploit route</span></span></button>
+        <button class="tool-btn" onclick="openDemo('redact')"><span class="icon" style="background:#172554;color:#60a5fa">R</span><span><span class="name">Redact</span><br><span class="desc">Strip emails, numbers, names</span></span></button>
+        <button class="tool-btn" onclick="openDemo('severity')"><span class="icon" style="background:#450a0a;color:#f87171">!</span><span><span class="name">Severity</span><br><span class="desc">Critical → Info + reason</span></span></button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Menu node -->
-  <rect x="170" y="110" width="120" height="50" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="230" y="140" fill="#e6edf3" font-size="14" text-anchor="middle">Chrome Menu</text>
-  <text x="230" y="154" fill="#8b949e" font-size="12" text-anchor="middle">src/ai-engine.js</text>
+  <!-- BENTO ROW 2: STATS -->
+  <div class="bento">
+    <div class="tile"><div class="label">Files</div><div class="big" id="stat-files">24</div><div class="sub">in repo</div></div>
+    <div class="tile"><div class="label">Lines</div><div class="big" id="stat-lines">2,978</div><div class="sub">source</div></div>
+    <div class="tile"><div class="label">Build</div><div class="big" id="stat-size">3</div><div class="sub">bundles</div></div>
+    <div class="tile"><div class="label">Demo</div><div class="big" id="stat-time">2:45</div><div class="sub">runtime</div></div>
+  </div>
 
-  <!-- Decision diamond -->
-  <rect x="350" y="100" width="140" height="70" rx="10" fill="#161b22" stroke="#e8a14d" stroke-width="1.5"/>
-  <text x="420" y="126" fill="#e8a14d" font-size="13" text-anchor="middle">Gemini Nano 4</text>
-  <text x="420" y="142" fill="#e8a14d" font-size="13" text-anchor="middle">available?</text>
-  <text x="420" y="158" fill="#8b949e" font-size="11" text-anchor="middle">capabilities()</text>
+  <!-- SUBMISSION TABLE -->
+  <div class="bento">
+    <div class="tile tile-full">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('submission')">Submission</button>
+        <button class="tab" onclick="switchTab('code')">Code</button>
+        <button class="tab" onclick="switchTab('firebase')">Firebase</button>
+        <button class="tab" onclick="switchTab('video')">Video</button>
+      </div>
 
-  <!-- On-device node -->
-  <rect x="550" y="30" width="150" height="55" rx="6" fill="#1a4721" stroke="#4ade80" stroke-width="1.5"/>
-  <text x="625" y="52" fill="#4ade80" font-size="14" text-anchor="middle">ON-DEVICE</text>
-  <text x="625" y="68" fill="#4ade80" font-size="12" text-anchor="middle">Gemini Nano 4</text>
+      <div class="tab-body active" id="tab-submission">
+        <table>
+          <thead><tr><th>Requirement</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Firebase AI Logic imported + called at runtime</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Platform: Web (Chrome)</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>App Check enforced</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Open source license (Apache-2.0)</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Public GitHub repo</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Description (anti-slop pass)</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Demo video (YouTube, ≤3 min)</td><td><span class="badge a"><span class="dot"></span>RECORD</span></td></tr>
+            <tr><td>Devpost form</td><td><span class="badge a"><span class="dot"></span>PENDING</span></td></tr>
+          </tbody>
+        </table>
+        <div class="progress"><div class="bar" style="width:75%"></div></div>
+        <p style="font-size:.75rem;color:var(--text-3);margin-top:.5rem">6 of 8 done — video + submission remain</p>
+      </div>
 
-  <!-- Cloud node -->
-  <rect x="550" y="200" width="150" height="55" rx="6" fill="#1a2332" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="625" y="222" fill="#58a6ff" font-size="14" text-anchor="middle">CLOUD</text>
-  <text x="625" y="238" fill="#58a6ff" font-size="12" text-anchor="middle">Firebase AI Logic</text>
+      <div class="tab-body" id="tab-code">
+        <table>
+          <thead><tr><th>File</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td><code>manifest.json</code></td><td>Chrome MV3 manifest</td></tr>
+            <tr><td><code>src/ai-engine.js</code></td><td>Hybrid inference + Firebase init</td></tr>
+            <tr><td><code>src/popup.js</code></td><td>Menu wiring + badge</td></tr>
+            <tr><td><code>src/background.js</code></td><td>Service worker</td></tr>
+            <tr><td><code>public/popup.html</code></td><td>Menu markup + styling</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- Result node -->
-  <rect x="330" y="130" width="0" height="0" rx="0" fill="none"/>
-  <text x="420" y="270" fill="#8b949e" font-size="12" text-anchor="middle">result → menu badge shows which runtime answered</text>
+      <div class="tab-body" id="tab-firebase">
+        <table>
+          <thead><tr><th>Product</th><th>Status</th><th>Use</th></tr></thead>
+          <tbody>
+            <tr><td>Firebase AI Logic</td><td><span class="badge g"><span class="dot"></span>ON</span></td><td>Cloud inference via <code>firebase/ai</code></td></tr>
+            <tr><td>App Check</td><td><span class="badge g"><span class="dot"></span>ON</span></td><td>Guards cloud endpoint</td></tr>
+            <tr><td>Analytics</td><td><span class="badge g"><span class="dot"></span>ON</span></td><td>Usage tracking</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-  <!-- Arrows -->
-  <defs>
-    <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="4">
-      <path d="M0 0 L8 4 L0 8 z" fill="#4ade80"/>
-    </marker>
-    <marker id="arr-b" markerWidth="8" markerHeight="8" refX="7" refY="4">
-      <path d="M0 0 L8 4 L0 8 z" fill="#58a6ff"/>
-    </marker>
-  </defs>
-  <path d="M 270 135 L 345 135" stroke="#58a6ff" stroke-width="1.5" fill="none"/>
-  <path d="M 490 122 L 548 60" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arr-g)"/>
-  <path d="M 490 150 L 548 218" stroke="#58a6ff" stroke-width="1.5" fill="none" marker-end="url(#arr-b)"/>
-  <text x="520" y="90" fill="#4ade80" font-size="11">YES → on-device</text>
-  <text x="520" y="190" fill="#58a6ff" font-size="11">NO → cloud</text>
-</svg>
+      <div class="tab-body" id="tab-video">
+        <table>
+          <thead><tr><th>Step</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Shot list written</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Narration p-free</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>PDF ready</td><td><span class="badge g"><span class="dot"></span>DONE</span></td></tr>
+            <tr><td>Record screen</td><td><span class="badge a"><span class="dot"></span>YOU</span></td></tr>
+            <tr><td>Upload YouTube</td><td><span class="badge r"><span class="dot"></span>WAIT</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Hybrid AI Security Companion · #BuildHybridAI 2026</span>
+    <button class="pill" onclick="copyText('npx 21st add hero hero.tsx && npm install && npm run build', this)">Copy setup commands</button>
+  </footer>
 </div>
-</section>
 
-<!-- FEATURES -->
-<section>
-<h2>Tools</h2>
-<div class="grid">
-<div class="card"><span class="badge ready status">READY</span><h3>Summarize</h3><p>Extracts vulnerability class, affected piece, attack trail, and severity from raw reports.</p></div>
-<div class="card"><span class="badge ready status">READY</span><h3>Attack Scenario</h3><p>Writes the exploit route in Google VRP format — attacker, gain, method.</p></div>
-<div class="card"><span class="badge ready status">READY</span><h3>Redact</h3><p>Scrubs emails, contact numbers, and names before sharing findings.</p></div>
-<div class="card"><span class="badge ready status">READY</span><h3>Severity</h3><p>Rates findings Critical to Info with a one-line justification.</p></div>
+<!-- MODAL -->
+<div class="modal-bg" id="detail-modal" onclick="if(event.target===this)toggleModal('detail-modal')">
+  <div class="modal">
+    <h2>Deadline<button class="close" onclick="toggleModal('detail-modal')">&times;</button></h2>
+    <div class="body">
+      <p><strong style="color:var(--amber)">Nov 30 2026 · 12:00pm HST</strong></p>
+      <p style="margin-top:.5rem">5 days left. Two tasks remain: record the screen demo, fill the Devpost form.</p>
+      <h3 style="margin:1rem 0 .5rem;font-size:.875rem">Recording command</h3>
+      <pre>cd ~/hybrid-ai-app/video
+./start-recording.sh ~/hybrid-demo.mp4
+# Ctrl-C to stop</pre>
+      <h3 style="margin:1rem 0 .5rem;font-size:.875rem">Then upload</h3>
+      <p>YouTube → Public (not unlisted) → copy URL → paste into Devpost.</p>
+    </div>
+  </div>
 </div>
-</section>
 
-<!-- STATS -->
-<section>
-<h2>Build</h2>
-<div class="stats">
-<div class="stat"><div class="num">14</div><div class="lab">Files</div></div>
-<div class="stat"><div class="num">2,978</div><div class="lab">Lines</div></div>
-<div class="stat"><div class="num">4</div><div class="lab">Tools</div></div>
-<div class="stat"><div class="num">Chrome</div><div class="lab">Platform</div></div>
-<div class="stat"><div class="num">Apache 2.0</div><div class="lab">License</div></div>
-</div>
-</section>
+<div id="toast"></div>
 
-<!-- FIREBASE -->
-<section>
-<h2>Firebase Products</h2>
-<table>
-<tr><th>Product</th><th>Status</th><th>Use</th></tr>
-<tr><td>Firebase AI Logic</td><td><span class="badge ready">ENABLED</span></td><td>Cloud inference via <code>firebase/ai</code></td></tr>
-<tr><td>App Check</td><td><span class="badge ready">ENABLED</span></td><td>Guards the cloud endpoint</td></tr>
-<tr><td>Analytics</td><td><span class="badge ready">ENABLED</span></td><td>Records tool usage</td></tr>
-</table>
-</section>
+<script>
+/* === TABS === */
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-body').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
 
-<!-- SUBMISSION -->
-<section>
-<h2>Submission</h2>
-<table>
-<tr><th>Requirement</th><th>Status</th></tr>
-<tr><td>Firebase AI Logic imported and called</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>Platform: Web (Chrome)</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>App Check enforced</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>Open source license (Apache-2.0)</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>Public GitHub repo</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>Demo video (YouTube, ≤3 min)</td><td><span class="badge progress">IN PROGRESS</span></td></tr>
-<tr><td>Description (anti-slop pass)</td><td><span class="badge ready">DONE</span></td></tr>
-<tr><td>Devpost form</td><td><span class="badge pending">PENDING</span></td></tr>
-</table>
-</section>
+/* === MODAL === */
+function toggleModal(id){
+  document.getElementById(id).classList.toggle('open');
+}
 
-<footer>
-Hybrid AI Security Companion · #BuildHybridAI 2026 · Deadline Nov 30 2026 12:00 HST
-</footer>
+/* === TOAST === */
+let toastTimer;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),2000);
+}
 
+/* === CLIPBOARD === */
+function copyText(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    showToast('Copied');
+  }).catch(()=>{
+    showToast('Copy failed');
+  });
+}
+
+/* === FLOW TRACE === */
+function openDemo(mode){
+  const nodes=['n1','n2','n3a','n3b'];
+  nodes.forEach(n=>document.getElementById(n).style.opacity='1');
+  
+  if(mode==='flow'){
+    let step=0;
+    const steps=[
+      ()=>{step=1;document.getElementById('n1').style.borderColor='var(--green)';setTimeout(()=>{document.getElementById('n1').style.borderColor='';},400);},
+      ()=>{step=2;document.getElementById('n2').style.borderColor='var(--green)';setTimeout(()=>{document.getElementById('n2').style.borderColor='';},400);},
+      ()=>{step=3;document.getElementById('n3a').style.boxShadow='0 0 20px var(--green)';setTimeout(()=>{document.getElementById('n3a').style.boxShadow='';},600);},
+      ()=>{step=4;document.getElementById('n3b').style.boxShadow='0 0 20px var(--blue)';setTimeout(()=>{document.getElementById('n3b').style.boxShadow='';},600);},
+    ];
+    let i=0;
+    const run=()=>{ if(i<steps.length){ steps[i++](); setTimeout(run,700); } };
+    run();
+  } else {
+    showToast(mode.charAt(0).toUpperCase()+mode.slice(1)+' — see extension');
+  }
+}
+
+/* === COUNT-UP ANIMATION === */
+document.querySelectorAll('.big').forEach(el=>{
+  const text=el.textContent;
+  const num=parseInt(text.replace(/[^0-9]/g,''));
+  if(!num)return;
+  let current=0;
+  const increment=Math.ceil(num/40);
+  const timer=setInterval(()=>{
+    current+=increment;
+    if(current>=num){ current=num; clearInterval(timer); }
+    el.textContent = current.toLocaleString();
+  },25);
+});
+</script>
 </body>
 </html>
