@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid AI Security Companion — Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Mono',monospace;background:#0d1117;color:#e6edf3;line-height:1.5;padding:2rem;max-width:1200px;margin:0 auto}
+h1{font-family:'IBM Plex Sans',sans-serif;color:#58a6ff;margin-bottom:.25rem}
+.sub{color:#8b949e;margin-bottom:2rem}
+.badge{display:inline-block;padding:.25rem .75rem;border-radius:12px;font-size:.8rem;font-weight:bold}
+.ready{background:#1a4721;color:#4ade80}
+.progress{background:#4d3a1c;color:#e8a14d}
+.pending{background:#3a0f0e;color:#f85149}
+section{margin-bottom:3rem}
+h2{font-family:'IBM Plex Sans',sans-serif;color:#a5d6ff;font-size:1.1rem;margin-bottom:1rem;border-bottom:1px solid #30363d;padding-bottom:.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1.5rem;transition:border-color .2s}
+.card:hover{border-color:#58a6ff}
+.card h3{font-size:1rem;color:#e6edf3;margin-bottom:.5rem}
+.card p{color:#8b949e;font-size:.875rem}
+.card .status{float:right;margin-top:-.25rem}
+.svg-container{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:2rem;margin-bottom:1.5rem;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1rem;text-align:center}
+.stat .num{font-size:1.8rem;color:#58a6ff;font-weight:bold}
+.stat .lab{font-size:.75rem;color:#8b949e;text-transform:uppercase;letter-spacing:.05em}
+table{width:100%;border-collapse:collapse}
+th,td{padding:.75rem;border-bottom:1px solid #30363d;text-align:left;font-size:.875rem}
+th{color:#8b949e;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+td{color:#e6edf3}
+tr:hover td{background:#161b22}
+.bar{height:8px;border-radius:4px;background:#30363d;overflow:hidden}
+.bar .fill{height:100%;border-radius:4px}
+.fill-green{background:#4ade80}
+.fill-amber{background:#e8a14d}
+.fill-red{background:#f85149}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid #30363d;color:#484f58;font-size:.8rem}
+</style>
+</head>
+<body>
+
+<h1>Hybrid AI Security Companion</h1>
+<p class="sub">Built for #BuildHybridAI 2026 — Firebase AI Logic Hybrid Inference SDK</p>
+<span class="badge ready" id="overall-badge">SUBMISSION READY</span>
+<span class="badge pending">DEADLINE: NOV 30</span>
+
+<!-- ARCHITECTURE -->
+<section>
+<h2>Hybrid Inference Architecture</h2>
+<div class="svg-container">
+<svg width="700" height="280" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+  <!-- User node -->
+  <rect x="10" y="110" width="100" height="50" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="60" y="140" fill="#e6edf3" font-size="14" text-anchor="middle">Security</text>
+  <text x="60" y="154" fill="#e6edf3" font-size="14" text-anchor="middle">Researcher</text>
+
+  <!-- Menu node -->
+  <rect x="170" y="110" width="120" height="50" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="230" y="140" fill="#e6edf3" font-size="14" text-anchor="middle">Chrome Menu</text>
+  <text x="230" y="154" fill="#8b949e" font-size="12" text-anchor="middle">src/ai-engine.js</text>
+
+  <!-- Decision diamond -->
+  <rect x="350" y="100" width="140" height="70" rx="10" fill="#161b22" stroke="#e8a14d" stroke-width="1.5"/>
+  <text x="420" y="126" fill="#e8a14d" font-size="13" text-anchor="middle">Gemini Nano 4</text>
+  <text x="420" y="142" fill="#e8a14d" font-size="13" text-anchor="middle">available?</text>
+  <text x="420" y="158" fill="#8b949e" font-size="11" text-anchor="middle">capabilities()</text>
+
+  <!-- On-device node -->
+  <rect x="550" y="30" width="150" height="55" rx="6" fill="#1a4721" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="625" y="52" fill="#4ade80" font-size="14" text-anchor="middle">ON-DEVICE</text>
+  <text x="625" y="68" fill="#4ade80" font-size="12" text-anchor="middle">Gemini Nano 4</text>
+
+  <!-- Cloud node -->
+  <rect x="550" y="200" width="150" height="55" rx="6" fill="#1a2332" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="625" y="222" fill="#58a6ff" font-size="14" text-anchor="middle">CLOUD</text>
+  <text x="625" y="238" fill="#58a6ff" font-size="12" text-anchor="middle">Firebase AI Logic</text>
+
+  <!-- Result node -->
+  <rect x="330" y="130" width="0" height="0" rx="0" fill="none"/>
+  <text x="420" y="270" fill="#8b949e" font-size="12" text-anchor="middle">result → menu badge shows which runtime answered</text>
+
+  <!-- Arrows -->
+  <defs>
+    <marker id="arr-g" markerWidth="8" markerHeight="8" refX="7" refY="4">
+      <path d="M0 0 L8 4 L0 8 z" fill="#4ade80"/>
+    </marker>
+    <marker id="arr-b" markerWidth="8" markerHeight="8" refX="7" refY="4">
+      <path d="M0 0 L8 4 L0 8 z" fill="#58a6ff"/>
+    </marker>
+  </defs>
+  <path d="M 270 135 L 345 135" stroke="#58a6ff" stroke-width="1.5" fill="none"/>
+  <path d="M 490 122 L 548 60" stroke="#4ade80" stroke-width="1.5" fill="none" marker-end="url(#arr-g)"/>
+  <path d="M 490 150 L 548 218" stroke="#58a6ff" stroke-width="1.5" fill="none" marker-end="url(#arr-b)"/>
+  <text x="520" y="90" fill="#4ade80" font-size="11">YES → on-device</text>
+  <text x="520" y="190" fill="#58a6ff" font-size="11">NO → cloud</text>
+</svg>
+</div>
+</section>
+
+<!-- FEATURES -->
+<section>
+<h2>Tools</h2>
+<div class="grid">
+<div class="card"><span class="badge ready status">READY</span><h3>Summarize</h3><p>Extracts vulnerability class, affected piece, attack trail, and severity from raw reports.</p></div>
+<div class="card"><span class="badge ready status">READY</span><h3>Attack Scenario</h3><p>Writes the exploit route in Google VRP format — attacker, gain, method.</p></div>
+<div class="card"><span class="badge ready status">READY</span><h3>Redact</h3><p>Scrubs emails, contact numbers, and names before sharing findings.</p></div>
+<div class="card"><span class="badge ready status">READY</span><h3>Severity</h3><p>Rates findings Critical to Info with a one-line justification.</p></div>
+</div>
+</section>
+
+<!-- STATS -->
+<section>
+<h2>Build</h2>
+<div class="stats">
+<div class="stat"><div class="num">14</div><div class="lab">Files</div></div>
+<div class="stat"><div class="num">2,978</div><div class="lab">Lines</div></div>
+<div class="stat"><div class="num">4</div><div class="lab">Tools</div></div>
+<div class="stat"><div class="num">Chrome</div><div class="lab">Platform</div></div>
+<div class="stat"><div class="num">Apache 2.0</div><div class="lab">License</div></div>
+</div>
+</section>
+
+<!-- FIREBASE -->
+<section>
+<h2>Firebase Products</h2>
+<table>
+<tr><th>Product</th><th>Status</th><th>Use</th></tr>
+<tr><td>Firebase AI Logic</td><td><span class="badge ready">ENABLED</span></td><td>Cloud inference via <code>firebase/ai</code></td></tr>
+<tr><td>App Check</td><td><span class="badge ready">ENABLED</span></td><td>Guards the cloud endpoint</td></tr>
+<tr><td>Analytics</td><td><span class="badge ready">ENABLED</span></td><td>Records tool usage</td></tr>
+</table>
+</section>
+
+<!-- SUBMISSION -->
+<section>
+<h2>Submission</h2>
+<table>
+<tr><th>Requirement</th><th>Status</th></tr>
+<tr><td>Firebase AI Logic imported and called</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>Platform: Web (Chrome)</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>App Check enforced</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>Open source license (Apache-2.0)</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>Public GitHub repo</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>Demo video (YouTube, ≤3 min)</td><td><span class="badge progress">IN PROGRESS</span></td></tr>
+<tr><td>Description (anti-slop pass)</td><td><span class="badge ready">DONE</span></td></tr>
+<tr><td>Devpost form</td><td><span class="badge pending">PENDING</span></td></tr>
+</table>
+</section>
+
+<footer>
+Hybrid AI Security Companion · #BuildHybridAI 2026 · Deadline Nov 30 2026 12:00 HST
+</footer>
+
+</body>
+</html>
