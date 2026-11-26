@@ -3,9 +3,8 @@ const path = require("path");
 module.exports = {
   mode: "production",
   entry: {
-    popup: "./src/popup.js",
-    background: "./src/background.js",
-    options: "./src/options.js",
+    "background": "./src/background.js",
+    "ui": "./src/ui-entry.js",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -16,7 +15,5 @@ module.exports = {
       "../firebase-config.json": path.resolve(__dirname, "firebase-config.json"),
     },
   },
-  optimization: {
-    minimize: false,
-  },
+  optimization: { minimize: false },
 };
