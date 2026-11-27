@@ -17,15 +17,20 @@ document.querySelectorAll("button[data-task]").forEach((btn) => {
     const text = inputBox.value.trim();
     if (!text) {
       resultBox.textContent = "Paste something first.";
+      resultBox.classList.remove("show");
       return;
     }
 
     const task = btn.dataset.task;
     resultBox.textContent = "Running...";
+    resultBox.classList.add("show");
 
     try {
       const answer = await run(task, text);
       resultBox.textContent = `[${answer.mode.toUpperCase()}]\n\n${answer.text}`;
+      badge.textContent = `${answer.mode.toUpperCase()} · ${
+        answer.mode === "on-device" ? "Gemini Nano 4" : "Firebase AI Logic"
+      }`;
     } catch (err) {
       resultBox.textContent = `Error: ${err.message}`;
     }
