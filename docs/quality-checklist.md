@@ -22,12 +22,10 @@ Every box must be checked before submit.
 - [x] LICENSE — Apache-2.0, visible in About section
 - [x] README.md — anti-slop pass done
 - [x] manifest.json — Chrome MV3
-- [x] src/ai-engine.js — imports getAI, getGenerativeModel, GoogleAIBackend
-- [x] src/popup.js — menu wiring
+- [x] src/engine.js — imports getAI, getGenerativeModel, GoogleAIBackend
+- [x] src/ui.js — menu wiring
 - [x] src/background.js — service worker
-- [x] src/options.js — configuration view
 - [x] public/popup.html — menu markup
-- [x] public/options.html — options markup
 - [x] firebase-config.json — project config
 - [x] package.json — deps + scripts
 - [x] webpack.config.cjs — build config

@@ -10,7 +10,7 @@
                       │ click
                       ▼
 ┌─────────────────────────────────────────────┐
-│        Hybrid engine (src/ai-engine.js)     │
+│        Hybrid engine (src/engine.js)     │
 │                                             │
 │  1. Is Gemini Nano 4 available on device?   │
 │     self.ai.languageModel.capabilities()    │
@@ -56,12 +56,11 @@ const model = getGenerativeModel(ai, {
 | File | Role |
 |---|---|
 | `manifest.json` | Chrome MV3 manifest |
-| `src/ai-engine.js` | Hybrid inference, Firebase init, tool prompts |
-| `src/popup.js` | Menu wiring, badge display, result rendering |
+| `src/engine.js` | Hybrid inference, Firebase init, tool prompts |
+| `src/firebase.js` | Firebase app init, `getAI`, `getGenerativeModel` |
+| `src/ui.js` | Menu wiring, badge display, result rendering |
 | `src/background.js` | Service worker, page text capture |
-| `src/options.js` | Configuration view |
 | `public/popup.html` | Menu markup and styling |
-| `public/options.html` | Options markup |
 
 ## The four tools
 
