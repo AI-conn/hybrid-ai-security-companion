@@ -1,6 +1,0 @@
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-0.mp4'
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-1.mp4'
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-2.mp4'
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-3.mp4'
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-4.mp4'
-file '/home/aiconic/khesf/qnx-room/bug-hunter/hybrid-ai-app/video/tmp/seg-5.mp4'
