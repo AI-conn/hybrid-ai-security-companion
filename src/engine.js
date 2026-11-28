@@ -1,6 +1,6 @@
 /* Engine — decides on-device or cloud, runs the query, reports which one answered. */
 
-import { cloudModel } from "./firebase.js";
+import { cloudModel, recordUsage } from "./firebase.js";
 
 const SYSTEM = "You are a senior security researcher. Answer briefly and technically. No filler.";
 
@@ -36,11 +36,13 @@ export async function run(task, input) {
       temperature: 0.3,
     });
     const text = await session.prompt(prompt + input);
+    recordUsage(task, "on-device");
     return { mode: "on-device", text };
   }
 
   const model = cloudModel(SYSTEM);
   const result = await model.generateContent(prompt + input);
+  recordUsage(task, "cloud");
   return { mode: "cloud", text: result.response.text() };
 }
 

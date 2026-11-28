@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1920px; height: 1080px; background: #0d1117; color: #e6edf3; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; position: relative; }
+  .stage { position: absolute; inset: 0; padding: 100px 140px; display: flex; flex-direction: column; }
+  .kicker { font-size: 22px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #58a6ff; margin-bottom: 28px; }
+  h1 { font-size: 84px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 60px; }
+  .flow { display: flex; align-items: center; gap: 36px; margin-top: 40px; }
+  .node { flex: 1; background: #161b22; border: 3px solid #30363d; border-radius: 20px; padding: 48px 40px; text-align: center; }
+  .node h2 { font-size: 44px; margin-bottom: 16px; }
+  .node p { font-size: 26px; color: #8b949e; line-height: 1.4; }
+  .arrow { font-size: 72px; color: #8b949e; font-weight: 700; }
+  .arrow.green { color: #3fb950; }
+  .arrow.red { color: #fb503b; }
+  .on-device { border-color: #3fb950; box-shadow: 0 0 60px rgba(63,185,80,0.25); }
+  .on-device h2 { color: #3fb950; }
+  .cloud { border-color: #fb503b; box-shadow: 0 0 60px rgba(251,80,59,0.25); }
+  .cloud h2 { color: #fb503b; }
+  .branch { display: flex; gap: 48px; margin-top: 48px; }
+  .branch .node { padding: 40px 32px; }
+  .footer { margin-top: auto; font-size: 24px; color: #8b949e; border-top: 2px solid #30363d; padding-top: 28px; display: flex; justify-content: space-between; }
+  .caption { font-size: 30px; color: #8b949e; margin-top: 44px; }
+  .big { font-size: 56px; color: #e6edf3; font-weight: 600; margin-top: 30px; line-height: 1.3; }
+  .checklist { margin-top: 60px; display: flex; flex-direction: column; gap: 36px; }
+  .check { display: flex; align-items: center; gap: 32px; background: #161b22; border: 3px solid #30363d; border-radius: 20px; padding: 40px 48px; }
+  .check .num { font-size: 56px; font-weight: 800; color: #58a6ff; min-width: 90px; text-align: center; }
+  .check h2 { font-size: 42px; margin-bottom: 8px; }
+  .check p { font-size: 28px; color: #8b949e; }
+  .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; }
+  .tool { background: #161b22; border: 3px solid #30363d; border-radius: 20px; padding: 44px; }
+  .tool h2 { font-size: 44px; color: #58a6ff; margin-bottom: 18px; }
+  .tool p { font-size: 28px; color: #8b949e; line-height: 1.45; }
+  .code { background: #010409; border: 3px solid #30363d; border-radius: 16px; padding: 36px 44px; font-family: ui-monospace, Menlo, monospace; font-size: 30px; line-height: 1.6; color: #c9d1d9; margin-top: 20px; }
+  .kw { color: #ff7b72; } .str { color: #a5d6ff; } .fn { color: #d2a8ff; }
+  .endcard { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; gap: 40px; }
+  .endcard h1 { font-size: 110px; margin-bottom: 0; }
+  .endcard .url { font-size: 44px; color: #58a6ff; font-family: ui-monospace, Menlo, monospace; }
+  .endcard .tag { font-size: 56px; font-weight: 800; letter-spacing: 0.06em; }
+  .endcard .stack { font-size: 30px; color: #8b949e; }
+</style></head>
+<body>
+<div class="stage" id="stage"></div>
+<script>
+/* Frame name comes from ?f= */
+const f = new URLSearchParams(location.search).get("f");
+const S = document.getElementById("stage");
+const K = (t) => `<div class="kicker">${t}</div>`;
+const footer = `<div class="footer"><span>Hybrid AI Security Companion</span><span>#BuildHybridAI 2026</span></div>`;
+
+const frames = {
+  /* SEGMENT 1 — title card */
+  "intro": `${K("#BuildHybridAI 2026 · Hackathon Demo")}
+    <h1>Hybrid AI<br>Security Companion</h1>
+    <div class="big">Private by default.<br>On-device when feasible, cloud when needed.</div>
+    ${footer}`,
+  /* SEGMENT 5 — architecture, staged builds */
+  "arch-1": `${K("Architecture")}
+    <h1>One call. Two runtimes.</h1>
+    <div class="flow">
+      <div class="node"><h2>Menu</h2><p>Input + four tools</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><h2>Engine</h2><p>one call into the Firebase AI Logic SDK</p></div>
+    </div>
+    ${footer}`,
+  "arch-2": `${K("Architecture")}
+    <h1>The engine asks two questions</h1>
+    <div class="flow">
+      <div class="node"><h2>Engine</h2><p>Firebase AI Logic SDK</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><h2>1 · Nano available?</h2><p>self.ai.languageModel.capabilities()</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><h2>2 · Text fits?</h2><p>context window check</p></div>
+    </div>
+    ${footer}`,
+  "arch-3": `${K("Architecture")}
+    <h1>If both are yes → local</h1>
+    <div class="flow">
+      <div class="node"><h2>Engine</h2><p>Firebase AI Logic SDK</p></div>
+      <div class="arrow green">→</div>
+      <div class="node on-device"><h2>ON-DEVICE</h2><p>Gemini Nano 4<br>confidential · free · offline</p></div>
+    </div>
+    <div class="caption">Nothing ever leaves the machine.</div>
+    ${footer}`,
+  "arch-4": `${K("Architecture")}
+    <h1>If either is no → cloud</h1>
+    <div class="flow">
+      <div class="node"><h2>Engine</h2><p>Firebase AI Logic SDK</p></div>
+      <div class="arrow red">→</div>
+      <div class="node cloud"><h2>CLOUD</h2><p>Gemini 2.0 Flash<br>via Firebase AI Logic</p></div>
+    </div>
+    <div class="caption">The identical request, routed when the local model can't take it.</div>
+    ${footer}`,
+  "arch-5": `${K("Architecture")}
+    <h1>One interface, two runtimes</h1>
+    <div class="flow">
+      <div class="node"><h2>Menu</h2><p>one call</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><h2>Engine</h2><p>two questions</p></div>
+    </div>
+    <div class="branch">
+      <div class="node on-device" style="flex:1"><h2>ON-DEVICE</h2><p>Gemini Nano 4 · green badge</p></div>
+      <div class="node cloud" style="flex:1"><h2>CLOUD</h2><p>Gemini 2.0 Flash via Firebase AI Logic · red badge</p></div>
+    </div>
+    <div class="caption">The tool doesn't care which one answered — the badge tells you.</div>
+    ${footer}`,
+  /* SEGMENT 4 — four tools */
+  "tools": `${K("The Toolkit")}
+    <h1>Four tools. One menu.</h1>
+    <div class="tools">
+      <div class="tool"><h2>Summarize</h2><p>Vulnerability class, affected element, attack trail, severity call — from any raw finding.</p></div>
+      <div class="tool"><h2>Attack Scenario</h2><p>The attack route in Google's reward format: who, what they gain, how.</p></div>
+      <div class="tool"><h2>Redact</h2><p>Scrubs emails, contact numbers, and names before anything goes to a shared tracker.</p></div>
+      <div class="tool"><h2>Severity</h2><p>Critical to Info, with a one-line justification.</p></div>
+    </div>
+    ${footer}`,
+  /* Segment 3 support — hybrid decision code */
+  "engine-code": `${K("The Hybrid Switch")}
+    <h1>The decision, in code</h1>
+    <div class="code">
+<span class="kw">const</span> caps = <span class="kw">await</span> self.ai.languageModel.<span class="fn">capabilities</span>();<br>
+<span class="kw">if</span> (caps.available === <span class="str">"readily"</span>) {<br>
+&nbsp;&nbsp;<span class="cm">// on-device: Gemini Nano 4 — nothing leaves the machine</span><br>
+&nbsp;&nbsp;<span class="kw">return</span> { mode: <span class="str">"on-device"</span>, text };<br>
+}<br>
+<span class="cm">// cloud fallback: same call, via Firebase AI Logic</span><br>
+<span class="kw">const</span> model = <span class="fn">cloudModel</span>(SYSTEM);  <span class="cm">// gemini-2.0-flash</span>
+    </div>
+    ${footer}`,
+  /* END CARD */
+  "endcard": `<div class="endcard">
+    <h1>Hybrid AI<br>Security Companion</h1>
+    <div class="url">github.com/AI-conn/hybrid-ai-security-companion</div>
+    <div class="tag" style="color:#58a6ff">#BuildHybridAI</div>
+    <div class="stack">Firebase AI Logic · Gemini Nano 4 on-device + Gemini 2.0 Flash cloud · Apache-2.0</div>
+  </div>`,
+};
+S.innerHTML = frames[f] || frames["intro"];
+</script>
+</body>
+</html>

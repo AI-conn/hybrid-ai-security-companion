@@ -18,7 +18,7 @@ The hybrid engine checks two things at load: is Gemini Nano installed on this ma
 
 ## What I built during this hackathon
 
-I built the extension source, the Firebase AI Logic integration, and the webpack build. The extension manifests as a Chrome MV3 extension with a service worker, a menu for user input, and an options view for configuration. The AI engine lives in `src/engine.js` and imports `getAI`, `getGenerativeModel`, and `GoogleAIBackend` from `firebase/ai` via `src/firebase.js`.
+I built the extension source, the Firebase AI Logic integration, and the webpack build. The extension is a Chrome MV3 extension with a service worker and a menu for user input. The AI engine lives in `src/engine.js` and imports `getAI`, `getGenerativeModel`, and `GoogleAIBackend` from `firebase/ai` via `src/firebase.js`. App Check initialization and Analytics usage recording are wired in `src/firebase.js`.
 
 ## Value proposition
 
@@ -41,6 +41,16 @@ Web (Chrome)
 
 ## Repository URL
 https://github.com/AI-conn/hybrid-ai-security-companion
+
+## URL for judging and testing
+The project is a Chrome extension — it runs locally, not hosted. To test it (from the repo README):
+
+1. `npm install`
+2. `npm run build`
+3. `chrome://extensions` → Developer mode → Load unpacked → select the `dist/` folder
+4. Click the extension icon — the menu opens with the runtime badge and all four tools
+
+App Check is claimed only if it is enabled in the Firebase console for this project; Analytics records `tool_run` events with the tool name and which runtime answered.
 
 ## Demo video
 YouTube URL: [TO BE ADDED AFTER RECORDING]

@@ -1,0 +1,39 @@
+[
+  {
+    "step": "chrome-up",
+    "ws": "ws://127.0.0.1:9225/devtools/browser/ffbf2a60-be50-47ac-8681-968c3625a82e"
+  },
+  {
+    "step": "extension-id",
+    "extId": "laoielmcocbjjlbgkmibohdfkbjjemhn"
+  },
+  {
+    "step": "popup-tab-open",
+    "targetId": "827064B868F4627F18D0EC499A6EB44F"
+  },
+  {
+    "step": "screenshot",
+    "file": "01-idle.png"
+  },
+  {
+    "step": "badge",
+    "badge": "CLOUD · Firebase AI Logic"
+  },
+  {
+    "step": "screenshot",
+    "file": "02-input.png"
+  },
+  {
+    "step": "screenshot",
+    "file": "03-running.png"
+  },
+  {
+    "step": "screenshot",
+    "file": "03-result.png"
+  },
+  {
+    "step": "result",
+    "settled": true,
+    "preview": "Error: AI: Error fetching from https://firebasevertexai.googleapis.com/v1beta/projects/hybrid-ai-security-companion/models/gemini-2.0-flash:generateContent: [40"
+  }
+]
