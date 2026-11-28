@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid AI Security Companion — Billion Dollar Presentation</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent-cloud: #fb503b;
+    --accent-device: #3fb950;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+  /* Deck */
+  #deck {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    margin: 0 auto;
+    perspective: 1200px;
+  }
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    padding: 90px 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateX(100px);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  /* Slide chrome */
+  .slide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(88,166,255,0.03) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .kicker {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  h1 { font-size: 64px; font-weight: 700; line-height: 1.05; margin-bottom: 24px; letter-spacing: -0.02em; }
+  h2 { font-size: 44px; font-weight: 600; line-height: 1.1; margin-bottom: 20px; letter-spacing: -0.01em; }
+  p { font-size: 22px; color: var(--muted); max-width: 1100px; }
+  .small { font-size: 18px; color: var(--muted); }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .tag.green { border-color: var(--accent-device); color: var(--accent-device); }
+  .tag.blue { border-color: var(--accent-cloud); color: var(--accent-cloud); }
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+  }
+  .card h3 { font-size: 20px; margin-bottom: 12px; color: var(--text); }
+  .card p { font-size: 16px; color: var(--muted); margin-bottom: 0; }
+  .card .mode-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+  .mode-badge.on-device { background: rgba(63,185,80,0.15); color: var(--accent-device); border: 1px solid rgba(63,185,80,0.35); }
+  .mode-badge.cloud { background: rgba(251,80,59,0.15); color: var(--accent-cloud); border: 1px solid rgba(251,80,59,0.35); }
+  /* Code block */
+  .code {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: #c9d1d9;
+    overflow-x: auto;
+    margin-top: 16px;
+  }
+  .code .kw { color: #ff7b72; }
+  .code .str { color: #a5d6ff; }
+  .code .fn { color: #d2a8ff; }
+  .code .lit { color: #79c0ff; }
+  /* Diagram */
+  .diagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 32px;
+  }
+  .node {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .node h4 { font-size: 18px; margin-bottom: 8px; }
+  .node p { font-size: 14px; color: var(--muted); margin-bottom: 0; }
+  .arrow {
+    font-size: 32px;
+    color: var(--muted);
+    align-self: center;
+  }
+  .arrow.yes { color: var(--accent-device); }
+  .arrow.no { color: var(--accent-cloud); }
+  /* Footer */
+  footer {
+    margin-top: auto;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  /* Controls (visible only when ?edit) */
+  #controls {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+    background: var(--surface);
+    padding: 10px 16px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+  }
+  #controls button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  #controls button.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    width: 0%;
+    z-index: 99;
+    transition: width 0.6s;
+  }
+  @media print { body { background: #fff; color: #000; } }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<div id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" id="s1">
+    <div>
+      <span class="kicker">#BuildHybridAI 2026 · Hackathon Submission</span>
+      <h1>Hybrid AI<br>Security Companion</h1>
+      <div class="tag green">ON-DEVICE · Gemini Nano 4</div>
+      <div class="tag blue">CLOUD · Firebase AI Logic</div>
+      <p style="max-width: 900px;">Private by default. A Chrome extension that runs AI inference inside your browser — and only reaches for the cloud when the job is too big for the device.</p>
+      <div style="margin-top: 40px;">
+        <span class="tag" style="background:transparent; border-color: var(--border); color: var(--muted);">Apache-2.0</span>
+        <span class="tag" style="background:transparent; border-color: var(--border); color: var(--muted);">Chrome MV3</span>
+        <span class="tag" style="background:transparent; border-color: var(--border); color: var(--muted);">Firebase AI Logic</span>
+      </div>
+    </div>
+    <footer>
+      <span>github.com/AI-conn/hybrid-ai-security-companion</span>
+      <span>1 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 2: THE PROBLEM -->
+  <div class="slide" id="s2">
+    <div>
+      <span class="kicker">The Problem</span>
+      <h2>Security researchers leak data<br>every time they paste into cloud AI</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>What goes up</h3>
+          <p>Raw bug reports, vulnerability details, PII, internal IP addresses, exploit routes — all sent to a third-party model for inference.</p>
+        </div>
+        <div class="card">
+          <h3>What comes back</h3>
+          <p>A summary, an attack scenario, a severity rating — and your data living on someone else's servers, logged, retained, and out of your control.</p>
+        </div>
+      </div>
+      <p style="margin-top: 32px; font-size: 24px; color: var(--text);">That's not a workflow. That's a liability.</p>
+    </div>
+    <footer>
+      <span>Hybrid AI Security Companion</span>
+      <span>2 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 3: THE HOOK -->
+  <div class="slide" id="s3">
+    <div>
+      <span class="kicker">The Hook</span>
+      <h2>Gemini Nano 4 runs<br>inside Chrome — on your machine</h2>
+      <div class="card" style="max-width: 700px;">
+        <span class="mode-badge on-device">ON-DEVICE · Gemini Nano 4</span>
+        <h3>Private by default</h3>
+        <p>Inference happens locally. Nothing leaves your machine. No API cost. No data exfiltration. Works offline.</p>
+        <div class="code" style="margin-top: 16px;">
+          <span class="kw">const</span> caps = <span class="kw">await</span> self.ai.languageModel.<span class="fn">capabilities</span>();<br>
+          <span class="kw">if</span> (caps.available === <span class="str">"readily"</span>) {<br>
+          &nbsp;&nbsp;<span class="kw">const</span> session = <span class="kw">await</span> self.ai.languageModel.<span class="fn">create</span>();<br>
+          &nbsp;&nbsp;<span class="kw">return</span> <span class="kw">await</span> session.<span class="fn">prompt</span>(input);<br>
+          }
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span>Hybrid AI Security Companion</span>
+      <span>3 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 4: THE SWITCH -->
+  <div class="slide" id="s4">
+    <div>
+      <span class="kicker">The Hybrid Switch</span>
+      <h2>Same menu. Two runtimes.<br>The badge tells you which answered.</h2>
+      <div class="diagram">
+        <div class="node">
+          <h4>Input</h4>
+          <p>Bug report or advisory pasted into the menu</p>
+        </div>
+        <div class="arrow yes">→</div>
+        <div class="node">
+          <h4>Engine Check</h4>
+          <p>Is Nano available?<br>Does input fit context?</p>
+        </div>
+        <div class="arrow yes">→</div>
+        <div class="node">
+          <h4 class="on-device">ON-DEVICE</h4>
+          <p class="small">Gemini Nano 4<br>Local · Free · Offline</p>
+        </div>
+        <div class="arrow no" style="font-size:28px;">↘</div>
+        <div class="node">
+          <h4 class="cloud">CLOUD</h4>
+          <p class="small">Gemini 2.0 Flash<br>Via Firebase AI Logic</p>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span>Hybrid AI Security Companion</span>
+      <span>4 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 5: FOUR TOOLS -->
+  <div class="slide" id="s5">
+    <div>
+      <span class="kicker">The Toolkit</span>
+      <h2>Four tools. One menu.<br>Built for a bounty chain.</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Summarize</h3>
+          <p>Raw bug report → vulnerability class, affected component, attack route, severity call.</p>
+        </div>
+        <div class="card">
+          <h3>Attack Scenario</h3>
+          <p>Vulnerability → Google VRP format: who the attacker is, what they gain, how they carry it out.</p>
+        </div>
+        <div class="card">
+          <h3>Redact</h3>
+          <p>Security text → emails, contact numbers, and names replaced before hitting a public tracker.</p>
+        </div>
+        <div class="card">
+          <h3>Severity</h3>
+          <p>Finding → Critical / High / Medium / Low / Info with a one-line justification.</p>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span>Hybrid AI Security Companion</span>
+      <span>5 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 6: ARCHITECTURE -->
+  <div class="slide" id="s6">
+    <div>
+      <span class="kicker">Architecture</span>
+      <h2>One interface. Two runtimes.<br>The tool doesn't care which answered.</h2>
+      <div class="code">
+        <span class="kw">const</span> ai = getAI(app, { backend: <span class="kw">new</span> GoogleAIBackend() });<br>
+        <span class="kw">const</span> model = getGenerativeModel(ai, {<br>
+        &nbsp;&nbsp;model: <span class="str">"gemini-2.0-flash"</span>,<br>
+        &nbsp;&nbsp;systemInstruction: systemPrompt<br>
+        });
+      </div>
+      <div class="grid-2" style="margin-top: 32px;">
+        <div class="card">
+          <span class="mode-badge on-device">ON-DEVICE</span>
+          <h3>Local path</h3>
+          <p>self.ai.languageModel.capabilities() → create session → prompt. Confidential, free, offline.</p>
+        </div>
+        <div class="card">
+          <span class="mode-badge cloud">CLOUD</span>
+          <h3>Firebase AI Logic path</h3>
+          <p>getAI + getGenerativeModel → Gemini 2.0 Flash via GoogleAIBackend. App Check guarded.</p>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span>Hybrid AI Security Companion</span>
+      <span>6 / 7</span>
+    </footer>
+  </div>
+
+  <!-- SLIDE 7: CTA -->
+  <div class="slide" id="s7">
+    <div>
+      <span class="kicker">Get Started</span>
+      <h2>Apache-2.0 · Open source<br>Three commands to run it</h2>
+      <div class="card" style="max-width: 700px;">
+        <div class="code">
+          git clone github.com/AI-conn/hybrid-ai-security-companion<br>
+          npm install<br>
+          Chrome → Load unpacked → dist/
+        </div>
+        <p style="margin-top: 24px; font-size: 20px; color: var(--text);">A confidential AI layer for your bug bounty workflow — free when local, capable when cloud, and never sending your data anywhere it doesn't have to go.</p>
+      </div>
+      <div style="margin-top: 40px; font-size: 32px; font-weight: 700; letter-spacing: -0.02em;">#BuildHybridAI</div>
+    </div>
+    <footer>
+      <span>github.com/AI-conn/hybrid-ai-security-companion</span>
+      <span>7 / 7</span>
+    </footer>
+  </div>
+
+</div>
+
+<div id="controls">
+  <button onclick="prev()">Prev</button>
+  <button onclick="next()">Next</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  function show(n) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === n);
+    });
+    document.getElementById('progress').style.width = ((n / (slides.length - 1)) * 100) + '%';
+    current = n;
+  }
+  function next() { if (current < slides.length - 1) show(current + 1); }
+  function prev() { if (current > 0) show(current - 1); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+  show(0);
+</script>
+</body>
+</html>
